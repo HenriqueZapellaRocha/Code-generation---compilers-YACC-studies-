@@ -155,9 +155,15 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
 		| exp NEQ exp		{ gcExpRel(NEQ); }											
 												
 		| exp OR exp		{ gcExpLog(OR); }											
-		| exp AND exp		{ gcExpLog(AND); }											
+		| exp AND exp		{ gcExpLog(AND); }		
+
+	| ID '=' exp {
+					System.out.println("\tPOPL %EDX");
+					System.out.println("\tMOVL %EDX, _" + $1);
+					System.out.println("\tPUSHL _" + $1);
+				}								
 		
-		;							
+		;						
 
 
 %%
