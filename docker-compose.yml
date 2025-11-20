@@ -3,6 +3,7 @@ version: "3.9"
 services:
   yacc32:
     build: .
+    platform: linux/amd64   # força arquitetura x86
     container_name: yacc32
     working_dir: /workspace
     volumes:

@@ -2,8 +2,8 @@
 # byacc/j from http://troi.lincom-asg.com/~rjamison/byacc/
 
 JFLEX  = java -jar JFlex.jar 
-BYACCJ = ./yacc.macos -tv -J
-JAVAC  = javac
+BYACCJ = ./yacc.linux -tv -J
+JAVAC = javac -encoding UTF-8
 
 # targets:
 
