@@ -6,10 +6,11 @@
 %}
  
 
-%token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE
+%token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE, DO 
 %token WHILE,TRUE, FALSE, IF, ELSE
 %token EQ, LEQ, GEQ, NEQ 
 %token AND, OR
+%token INC, DEC 
 
 %right '='
 %left OR
@@ -161,7 +162,33 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
 					System.out.println("\tPOPL %EDX");
 					System.out.println("\tMOVL %EDX, _" + $1);
 					System.out.println("\tPUSHL _" + $1);
-				}								
+				}	
+	/* pre increment and decremnt*/
+	| INC ID {
+		System.out.println("\tMOVL _" + $2 + ", %EAX");
+		System.out.println("\tINC %EAX");
+		System.out.println("\tMOVL %EAX, _" + $2);
+		System.out.println("\tPUSHL _" + $2);
+	}			
+	| DEC ID {
+		System.out.println("\tMOVL _" + $2 + ", %EAX");
+		System.out.println("\tDEC %EAX");
+		System.out.println("\tMOVL %EAX, _" + $2);
+		System.out.println("\tPUSHL _" + $2);
+	}
+	/* post increment and decremnt*/
+	| ID INC {
+		System.out.println("\tPUSHL _" + $1);
+		System.out.println("\tMOVL _" + $1 + ", %EAX");
+		System.out.println("\tINC %EAX");
+		System.out.println("\tMOVL %EAX, _" + $1);
+	}		
+	| ID DEC {
+		System.out.println("\tPUSHL _" + $1);
+		System.out.println("\tMOVL _" + $1 + ", %EAX");
+		System.out.println("\tDEC %EAX");
+		System.out.println("\tMOVL %EAX, _" + $1);
+	}	
 		
 		;						
 
