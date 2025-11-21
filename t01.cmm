@@ -3,13 +3,13 @@ int b;
 int c;
 
 void main() {  
-    a = 1;
-    b = a++;
-    c = a++;
+    a = 10;
+    b = 2;
+    b += a;
     
     write (" a =  ", a );
     write (" b =  ", b );
-    write (" c =  ", c );
+
 
 
 }

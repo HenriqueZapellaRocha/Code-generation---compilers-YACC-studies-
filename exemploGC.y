@@ -6,13 +6,14 @@
 %}
  
 
-%token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE, DO 
+%token ID, INT, FLOAT, BOOL, NUM, LIT, VOID, MAIN, READ, WRITE, IF, ELSE, DO
 %token WHILE,TRUE, FALSE, IF, ELSE
-%token EQ, LEQ, GEQ, NEQ 
+%token EQ, LEQ, GEQ, NEQ, SEQ MEQ
 %token AND, OR
-%token INC, DEC 
+%token INC, DEC
 
-%right '='
+%right '=' SEQ MEQ
+%right ADD_ASSIGN SUB_ASSIGN
 %left OR
 %left AND
 %left  '>' '<' EQ LEQ GEQ NEQ
@@ -55,6 +56,8 @@ cmd :  ID '=' exp	';' {  System.out.println("\tPOPL %EDX");
   						   System.out.println("\tMOVL %EDX, _"+$1);
 					     }
 			| '{' lcmd '}' { System.out.println("\t\t# terminou o bloco..."); }
+		
+		| exp ';'          { System.out.println("\tPOPL %EAX"); }
 					     
 					       
       | WRITE '(' LIT ')' ';' { strTab.add($3);
@@ -163,6 +166,22 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
 					System.out.println("\tMOVL %EDX, _" + $1);
 					System.out.println("\tPUSHL _" + $1);
 				}	
+
+		/* += and -= */
+	| ID SEQ exp {
+		System.out.println("\tPOPL %EDX");
+		System.out.println("\tMOVL _" + $1 + ",%EAX");
+		System.out.println("\tADDL %EDX, %EAX");
+		System.out.println("\tMOVL %EAX, _" + $1);
+		System.out.println("\tPUSHL _" + $1);
+	}
+	| ID MEQ exp {
+		System.out.println("\tPOPL %EDX");
+		System.out.println("\tMOVL _" + $1 + ",%EAX");
+		System.out.println("\tSUBL %EDX, %EAX");
+		System.out.println("\tMOVL %EAX, _" + $1);
+		System.out.println("\tPUSHL _" + $1);
+	}
 	/* pre increment and decremnt*/
 	| INC ID {
 		System.out.println("\tMOVL _" + $2 + ", %EAX");
@@ -189,6 +208,23 @@ exp :  NUM  { System.out.println("\tPUSHL $"+$1); }
 		System.out.println("\tDEC %EAX");
 		System.out.println("\tMOVL %EAX, _" + $1);
 	}	
+	/*ternary operator*/
+	| exp '?' {
+		pRot.push(proxRot); proxRot += 2;
+		System.out.println("\tPOPL %EAX");
+		System.out.println("\tCMPL $0, %EAX");
+		System.out.printf("\tJE rot_%02d\n", (int)pRot.peek()+1);
+	| exp ':' {
+		System.out.printf("\tJMP rot_%02d\n", pRot.peek()+1); 
+        System.out.printf("rot_%02d:\n", pRot.peek());     
+	}
+	| exp {
+		System.out.printf("rot_%02d:\n", pRot.peek()+1);      
+        pRot.pop();
+	}
+
+	}
+	
 		
 		;						
 
