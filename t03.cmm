@@ -1,6 +1,7 @@
 int a; 
 int b; 
 int c;
+int test;
 
 void main() {  
     a = 1;
@@ -12,8 +13,11 @@ void main() {
     write (" a =  ", a );
     
    
+    test = 10 < 0 ? 101 : 201;
+
     b = 10;
     c = --b + b--;
+    write (" test =  ", test );
     write (" b =  ", b );
     write (" c =  ", c );
     

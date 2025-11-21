@@ -60,6 +60,24 @@ _start:
 	CALL _write
 	CALL _writeln
 	PUSHL $10
+	PUSHL $0
+	POPL %EAX
+	POPL %EDX
+	CMPL %EAX, %EDX
+	MOVL $0, %EAX
+	SETL  %AL
+	PUSHL %EAX
+	POPL %EAX
+	CMPL $0, %EAX
+	JE rot_01
+	PUSHL $101
+	JMP rot_02
+rot_01:
+	PUSHL $201
+rot_02:
+	POPL %EDX
+	MOVL %EDX, _test
+	PUSHL $10
 	POPL %EDX
 	MOVL %EDX, _b
 	MOVL _b, %EAX
@@ -79,12 +97,19 @@ _start:
 	MOVL $_str_2Len, %EDX
 	MOVL $_str_2, %ECX
 	CALL _writeLit
-	PUSHL _b
+	PUSHL _test
 	POPL %EAX
 	CALL _write
 	CALL _writeln
 	MOVL $_str_3Len, %EDX
 	MOVL $_str_3, %ECX
+	CALL _writeLit
+	PUSHL _b
+	POPL %EAX
+	CALL _write
+	CALL _writeln
+	MOVL $_str_4Len, %EDX
+	MOVL $_str_4, %ECX
 	CALL _writeLit
 	PUSHL _c
 	POPL %EAX
@@ -185,6 +210,7 @@ _fimread2:
 _a:	.zero 4
 _b:	.zero 4
 _c:	.zero 4
+_test:	.zero 4
 
 #
 # area de literais
@@ -202,8 +228,11 @@ _str_1:
 	 .ascii " a =  "
 _str_1Len = . - _str_1
 _str_2:
-	 .ascii " b =  "
+	 .ascii " test =  "
 _str_2Len = . - _str_2
 _str_3:
-	 .ascii " c =  "
+	 .ascii " b =  "
 _str_3Len = . - _str_3
+_str_4:
+	 .ascii " c =  "
+_str_4Len = . - _str_4
